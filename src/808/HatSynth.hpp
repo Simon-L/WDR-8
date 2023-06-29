@@ -9,6 +9,7 @@
 
 #include "Resonator.hpp"
 #include "OscMetal.hpp"
+#include "digital.hpp"
 
 struct HatSynth
 {   
@@ -50,11 +51,14 @@ struct HatSynth
 
     sst::surgext_rack::dsp::envelopes::ADAREnvelope vca_env;
     sst::surgext_rack::dsp::envelopes::ADAREnvelope vcf_env;
+    
+    rack::dsp::PulseGenerator trigger;
 
     float OutputLPFFreq = 45630.0;
     float OutputLPResonance = 0.27;
 
     float sampleRate;
+    float sampleTime;
 
     float note_cv;
     uint8_t wfm = 1; // 1 == saw, 0 == square
@@ -74,12 +78,17 @@ struct HatSynth
 
     inline void setMidiNote(uint8_t m) { note_cv = (std::clamp((int)m, 12, 72) - 12) / 12.0; }
     inline void slideMidiNote(uint8_t m) { slide = true; note_cv = (std::clamp((int)m, 12, 72) - 12) / 12.0; }
+    
+    float Atime = log2(1.5e-3f);
+    float H = log2(2.2e-3f);
+    float Rtime = log2(100e-3f);
 
     void gateOn(bool accent) {
         gate = true;
         slide = false;
         this->accent = accent;
-        vca_env.attackFrom(0.0, 1, false, false); // from, shape, isDigital, isGated
+        trigger.trigger(3.7e-3f);
+        vca_env.attackFrom(0.0, 1, false, true); // from, shape, isDigital, isGated
     }
 
     void gateOff() {
@@ -92,6 +101,7 @@ struct HatSynth
 
     void prepare(float sampleRate) {
         this->sampleRate = sampleRate;
+        this->sampleTime = 1.0/sampleRate;
         
         reso.prepare(sampleRate);
         reso.setParameters(82e3, 560.0, 3.3e-9);
@@ -114,8 +124,10 @@ struct HatSynth
         metal.process(metalBuffer, 1);
 
         float reso_out = reso.processSample(metalBuffer[0]);
+        
+        auto b = trigger.process(sampleTime);
 
-        vca_env.process(-10.2877, gate ? vcaDecTime : -7.38f, 1, 1, false); // atk, dec, atk shape, dec shape, gate
+        vca_env.process(Atime, Rtime, 1, 1, b); // atk, dec, atk shape, dec shape, gate
 
         float amp = vca_env.output;
         float hpf_out = fi.processSample(reso_out);

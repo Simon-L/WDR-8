@@ -29,6 +29,7 @@ dpf_add_plugin(${NAME}
       dpf-widgets/opengl/DearImGui.cpp)
 
 target_include_directories(${NAME} PUBLIC src)
+target_include_directories(${NAME} PUBLIC include)
 target_include_directories(${NAME} PUBLIC dpf-widgets/generic)
 target_include_directories(${NAME} PUBLIC dpf-widgets/opengl)
 target_include_directories(${NAME} PUBLIC dpf-widgets/opengl/DearImGui)
