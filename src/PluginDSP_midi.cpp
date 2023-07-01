@@ -18,33 +18,14 @@ void PluginDSP::handleMidi(const MidiEvent* event)
         return;
     }
     if (b0 == 0x90) {
-        if (nextGateOff == -1) {
-            d_stdout("Gate ON after rest, disable slide, nextGateOff is %d", b1);
-            nextGateOff = b1;
-            accent = b2 > 100;
-            if (accent) {
-                d_stdout("Accent!");
-            } else {
-                accent = false;
-            }
-            synth.setMidiNote(b1);
-            synth.gateOn(accent);
-            hat1.gateOn(accent);
-        } else {
-            d_stdout("Gate ON Slide to %d, nextGateOff is %d", b1, b1);
-            nextGateOff = b1;
-            synth.slideMidiNote(b1);
+        if (b1 == 42) // GM note #42 F#1 : Closed Hi Hat
+        {
+            hat1.ChGateOn(accent);
         }
-        return;
-    } else if (b0 == 0x80) {
-        if (b1 == nextGateOff) {
-            d_stdout("Gate OFF (%d)", b1);
-            nextGateOff = -1;
-            synth.gateOff();
-            hat1.gateOff();
-        } else {
-            d_stdout("Ignored off for %d != %d", b1, nextGateOff);
+        
+        if (b1 == 46) // GM note #46 Bb1 : Open Hi Hat
+        {
+            hat1.OhGateOn(accent);
         }
-        return;
     }
 }

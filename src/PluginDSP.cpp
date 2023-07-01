@@ -47,9 +47,9 @@ void PluginDSP::run(const float** inputs, float** outputs, uint32_t frames, cons
     // apply gain against all samples
     for (uint32_t i=0; i < frames; ++i)
     {   
-        float hat = hat1.process() * 0.5;
-        outL[i] = hat * params.values[kVolume];
-        outR[i] = hat * params.values[kVolume];
+        hat1.process();
+        outL[i] = (hat1.ch_out + hat1.oh_out) * 0.5 * params.values[kVolume];
+        outR[i] = (hat1.ch_out + hat1.oh_out) * 0.5 * params.values[kVolume];
 
         // plot[plotIndex] = synth.freq;
         // plotIndex++;

@@ -59,16 +59,16 @@ private:
     wdft::WDFSeriesT<float, decltype (Vin), decltype (C4)> S1 { Vin, C4 };
 
     // Port B
-    wdft::ResistorT<float> R197 { 820.0e3f };
+    wdft::ResistorT<float> R197 { 82.0e3f };
 
     // Port C
-    wdft::CapacitorT<float> C58 { 0.027e-6f };
+    wdft::CapacitorT<float> C58 { 3.3e-9f };
 
     // Port D
-    wdft::CapacitorT<float> C59 { 0.027e-6f };
+    wdft::CapacitorT<float> C59 { 3.3e-9f };
 
     // Port E
-    wdft::ResistorT<float> R196 { 680.0f };
+    wdft::ResistorT<float> R196 { 560.0f };
 
     struct ImpedanceCalc
     {

@@ -11,6 +11,7 @@ set(NAME eightohat)
 project(${NAME})
 
 add_subdirectory(dpf)
+add_subdirectory(sst-basic-blocks)
 
 dpf_add_plugin(${NAME}
   TARGETS vst3 clap lv2 jack
@@ -27,6 +28,8 @@ dpf_add_plugin(${NAME}
       implot/implot_items.cpp
       imgui-knobs/imgui-knobs.cpp
       dpf-widgets/opengl/DearImGui.cpp)
+
+target_link_libraries(${NAME} PUBLIC sst-basic-blocks)
 
 target_include_directories(${NAME} PUBLIC src)
 target_include_directories(${NAME} PUBLIC include)
