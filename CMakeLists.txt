@@ -21,13 +21,13 @@ dpf_add_plugin(${NAME}
       src/PluginDSP_metadata.cpp
       src/PluginDSP_midi.cpp
       src/PluginDSP_parameters.cpp
-  FILES_UI
-      src/PluginUI.cpp
-      implot/implot.cpp
-      implot/implot_demo.cpp
-      implot/implot_items.cpp
-      imgui-knobs/imgui-knobs.cpp
-      dpf-widgets/opengl/DearImGui.cpp)
+  FILES_UI)
+      # src/PluginUI.cpp
+      # implot/implot.cpp
+      # implot/implot_demo.cpp
+      # implot/implot_items.cpp
+      # imgui-knobs/imgui-knobs.cpp
+      # dpf-widgets/opengl/DearImGui.cpp)
 
 target_link_libraries(${NAME} PUBLIC sst-basic-blocks)
 
