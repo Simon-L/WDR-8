@@ -50,7 +50,7 @@ struct eightohatParameters
         Parameter(kParameterIsAutomatable|kParameterIsBoolean, "Waveform", "waveform", "", 0.0f, 0.0, 1.0), // Waveform
         Parameter(kParameterIsAutomatable, "Tuning", "tuning", "", 0.0f, -1.0, 1.0), // Tuning
         Parameter(kParameterIsAutomatable, "VCA Dec", "vca_dec", "", 2.0f, -3.5, 6.0), // VcaDec
-        Parameter(kParameterIsAutomatable, "CH hpf", "ch_hpf", "", 13000.0f, 10000.0f, 17000.0), // closed hat hpf
+        Parameter(kParameterIsAutomatable, "CH hpf", "ch_hpf", "", 12200.0f, 9000.0f, 17000.0), // closed hat hpf
         Parameter(kParameterIsAutomatable, "CH dec", "ch_dec", "", 70e-3f, 20e-3f, 1500e-3f), // closed hat dec
         Parameter(kParameterIsAutomatable, "OH dec", "oh_dec", "", 120e-3f, 40e-3f, 650e-3f), // open hat dec
         Parameter(kParameterIsAutomatable, "Volume", "volume", "", 0.6303f, 0.0, 1.0), // Volume

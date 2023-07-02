@@ -68,7 +68,7 @@ struct HatSynth
     
     HatResonatorWDF reso;
     OscMetal metal;
-    float metalBuffer[4];
+    double metalBuffer[4];
     chowdsp::ButterworthFilter< 2, chowdsp::ButterworthFilterType::Highpass, float> ch_hpf;
     chowdsp::ButterworthFilter< 2, chowdsp::ButterworthFilterType::Highpass, float> oh_hpf;
     
@@ -85,9 +85,9 @@ struct HatSynth
         float envelope_rate_linear_nowrap(float f) const { return 16 * sampleRateInv * pow(2.f, -f); }
     } srp;
 
-    std::unique_ptr<sst::basic_blocks::modulators::ADAREnvelope<SampleSRProvider, 16>> ch_env;  
-    std::unique_ptr<sst::basic_blocks::modulators::ADSREnvelope<SampleSRProvider, 16>> oh_env;  
-
+    std::unique_ptr<sst::basic_blocks::modulators::ADAREnvelope<SampleSRProvider, 16>> ch_env;
+    std::unique_ptr<sst::basic_blocks::modulators::ADSREnvelope<SampleSRProvider, 16>> oh_env;
+    
     bool gate = false;
     bool accent = false;
     bool slide = false;
@@ -152,14 +152,14 @@ struct HatSynth
         metal.setPitchCV(1.0f);
         
         ch_hpf.prepare(1);
-        ch_hpf.calcCoefs(12200, 1.0, sampleRate);        
+        ch_hpf.calcCoefs(12200, 1.0, sampleRate);
         oh_hpf.prepare(1);
-        oh_hpf.calcCoefs(8000, 1.0, sampleRate);        
+        oh_hpf.calcCoefs(8200, 1.0, sampleRate);
     }
     
     void process() {
         metal.process(metalBuffer, 1);
-        float reso_out = reso.processSample(metalBuffer[0] * 0.5);        
+        float reso_out = reso.processSample(metalBuffer[0]);
 
         auto ChGate = ChTrigger.process(sampleTime);
         ch_env.get()->processScaledAD(ChAtime, ChRtime, 1, 1, ChGate); // atk, dec, atk shape, dec shape, gate

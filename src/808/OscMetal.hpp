@@ -5,12 +5,12 @@
 struct OscMetal {
 
     float pow = 0.0f;
-    chowdsp::SquareWave<float> sq1;
-    chowdsp::SquareWave<float> sq2;
-    chowdsp::SquareWave<float> sq3;
-    chowdsp::SquareWave<float> sq4;
-    chowdsp::SquareWave<float> sq5;
-    chowdsp::SquareWave<float> sq6;
+    chowdsp::SquareWave<double> sq1;
+    chowdsp::SquareWave<double> sq2;
+    chowdsp::SquareWave<double> sq3;
+    chowdsp::SquareWave<double> sq4;
+    chowdsp::SquareWave<double> sq5;
+    chowdsp::SquareWave<double> sq6;
     juce::dsp::ProcessSpec spec;
 
     float cv;
@@ -19,26 +19,31 @@ struct OscMetal {
     void setPitchCV(float value) {
         cv = value;
         // 205.3, 369.6, 304.4, 522.7, 800, 540
-        sq1.setFrequency(205.3);
-        sq2.setFrequency(369.6);
-        sq3.setFrequency(304.4);
-        sq4.setFrequency(522.7);
+        // sq1.setFrequency(142);
+        // sq2.setFrequency(211);
+        // sq3.setFrequency(297);
+        // sq4.setFrequency(385);
+        // sq5.setFrequency(800);
+        // sq6.setFrequency(540);
+        sq1.setFrequency(205.347);
+        sq2.setFrequency(369.624);
+        sq3.setFrequency(304.396);
+        sq4.setFrequency(522.701);
         sq5.setFrequency(800);
-        sq6.setFrequency(540);
+        sq6.setFrequency(540.54);
     }
 
-    void process(float* buf, uint32_t frames) {
+    void process(double* buf, uint32_t frames) {
         float f;
         for (uint32_t i=0; i < frames; ++i)
-        {   
-            float out =
-                sq1.processSample() +
-                sq2.processSample() +
-                sq3.processSample() +
-                sq4.processSample() +
-                sq5.processSample() +
-                sq6.processSample();
-            out *= 0.166;
+        {
+            double out =
+                sq1.processSample() * 0.08 +
+                sq2.processSample() * 0.08 +
+                sq3.processSample() * 0.08 +
+                sq4.processSample() * 0.08 +
+                sq5.processSample() * 0.08 +
+                sq6.processSample() * 0.08;
             buf[i] = out;
         }
     }
@@ -53,6 +58,12 @@ struct OscMetal {
         sq4.prepare(spec);
         sq5.prepare(spec);
         sq6.prepare(spec);
+        sq1.setDutyCycle(0.4798);
+        sq2.setDutyCycle(0.4798);
+        sq3.setDutyCycle(0.4798);
+        sq4.setDutyCycle(0.4798);
+        sq5.setDutyCycle(0.4798);
+        sq6.setDutyCycle(0.4798);
 
         setPitchCV(defaultCV);
     }
