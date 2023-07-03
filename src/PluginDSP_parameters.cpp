@@ -51,7 +51,7 @@ void PluginDSP::setParameterValue(uint32_t index, float value)
     case kCHhpf:
         // synth.setVcaDecay(params.values[kVcaDec]);
         printf("set ch hpf freq %f\n", value);
-        hat1.setChHpf(value);
+        // hat1.setChHpf(value);
         break;
     case kCHdec:
         hat1.setChDec(value);

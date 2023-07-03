@@ -152,9 +152,9 @@ struct HatSynth
         metal.setPitchCV(1.0f);
         
         ch_hpf.prepare(1);
-        ch_hpf.calcCoefs(12200, 1.0, sampleRate);
+        ch_hpf.calcCoefs(11300, 1.43, sampleRate);
         oh_hpf.prepare(1);
-        oh_hpf.calcCoefs(8200, 1.0, sampleRate);
+        oh_hpf.calcCoefs(7725, 1.9, sampleRate);
     }
     
     void process() {
@@ -164,13 +164,13 @@ struct HatSynth
         auto ChGate = ChTrigger.process(sampleTime);
         ch_env.get()->processScaledAD(ChAtime, ChRtime, 1, 1, ChGate); // atk, dec, atk shape, dec shape, gate
         float ChAmp = ch_env.get()->output;
-        float ch_hpf_out = ch_hpf.processSample(reso_out);
+        float ch_hpf_out = ch_hpf.processSample(reso_out * 1.5);
         ch_out = ch_hpf_out * ChAmp;
 
         auto OhGate = OhTrigger.process(sampleTime);
         oh_env.get()->process(OhAtime, OhDtime, OhSustain, OhRtime, 1, 1, 1, OhGate); // a, d, s, r, ashp, dshp, rshp, gateActive
         float OhAmp = oh_env.get()->output;
-        float oh_hpf_out = oh_hpf.processSample(reso_out);
+        float oh_hpf_out = oh_hpf.processSample(reso_out * 1.17);
         oh_out = oh_hpf_out * OhAmp;
     }
 };
