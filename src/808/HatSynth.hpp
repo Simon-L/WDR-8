@@ -69,8 +69,8 @@ struct HatSynth
     HatResonatorWDF reso;
     OscMetal metal;
     double metalBuffer[4];
-    chowdsp::ButterworthFilter< 2, chowdsp::ButterworthFilterType::Highpass, float> ch_hpf;
-    chowdsp::ButterworthFilter< 2, chowdsp::ButterworthFilterType::Highpass, float> oh_hpf;
+    chowdsp::ButterworthFilter<3, chowdsp::ButterworthFilterType::Highpass, float> ch_hpf;
+    chowdsp::ButterworthFilter<3, chowdsp::ButterworthFilterType::Highpass, float> oh_hpf;
     
     rack::dsp::PulseGenerator ChTrigger;
     rack::dsp::PulseGenerator OhTrigger;
@@ -97,7 +97,7 @@ struct HatSynth
     float ChRtime = log2(70e-3f);
     
     float OhAtime = 0.001;
-    float OhDtime = 0.75;
+    float OhDtime = 0.55;
     float OhSustain = 0.0f;
     float OhRtime = 4 * 0.10;
     
@@ -152,9 +152,9 @@ struct HatSynth
         metal.setPitchCV(1.0f);
         
         ch_hpf.prepare(1);
-        ch_hpf.calcCoefs(11300, 1.43, sampleRate);
+        ch_hpf.calcCoefs(11550, 1.4, sampleRate);
         oh_hpf.prepare(1);
-        oh_hpf.calcCoefs(7725, 1.9, sampleRate);
+        oh_hpf.calcCoefs(7580, 1.28, sampleRate);
     }
     
     void process() {
@@ -164,13 +164,13 @@ struct HatSynth
         auto ChGate = ChTrigger.process(sampleTime);
         ch_env.get()->processScaledAD(ChAtime, ChRtime, 1, 1, ChGate); // atk, dec, atk shape, dec shape, gate
         float ChAmp = ch_env.get()->output;
-        float ch_hpf_out = ch_hpf.processSample(reso_out * 1.5);
+        float ch_hpf_out = ch_hpf.processSample(reso_out * 1.31);
         ch_out = ch_hpf_out * ChAmp;
 
         auto OhGate = OhTrigger.process(sampleTime);
         oh_env.get()->process(OhAtime, OhDtime, OhSustain, OhRtime, 1, 1, 1, OhGate); // a, d, s, r, ashp, dshp, rshp, gateActive
         float OhAmp = oh_env.get()->output;
-        float oh_hpf_out = oh_hpf.processSample(reso_out * 1.17);
+        float oh_hpf_out = oh_hpf.processSample(reso_out * 1.15);
         oh_out = oh_hpf_out * OhAmp;
     }
 };
