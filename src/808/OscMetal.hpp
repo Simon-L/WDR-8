@@ -38,12 +38,12 @@ struct OscMetal {
         for (uint32_t i=0; i < frames; ++i)
         {
             double out =
-                sq1.processSample() * 0.02 +
-                sq2.processSample() * 0.02 +
-                sq3.processSample() * 0.02 +
-                sq4.processSample() * 0.02 +
-                sq5.processSample() * 0.02 +
-                sq6.processSample() * 0.02;
+                sq1.processSample() * 0.04 +
+                sq2.processSample() * 0.04 +
+                sq3.processSample() * 0.04 +
+                sq4.processSample() * 0.04 +
+                sq5.processSample() * 0.04 +
+                sq6.processSample() * 0.04;
             buf[i] = out;
         }
     }

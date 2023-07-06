@@ -78,15 +78,15 @@ struct HatSynth
     float sampleRate;
     float sampleTime;
 
-    struct SampleSRProvider
+    struct SRProvider
     {
         double samplerate, sampleRateInv;
         void prepare(double sr) { samplerate = sr; sampleRateInv = 1.f / samplerate; }
         float envelope_rate_linear_nowrap(float f) const { return 16 * sampleRateInv * pow(2.f, -f); }
     } srp;
 
-    std::unique_ptr<sst::basic_blocks::modulators::ADAREnvelope<SampleSRProvider, 16>> ch_env;
-    std::unique_ptr<sst::basic_blocks::modulators::ADSREnvelope<SampleSRProvider, 16>> oh_env;
+    std::unique_ptr<sst::basic_blocks::modulators::ADAREnvelope<SRProvider, 16>> ch_env;
+    std::unique_ptr<sst::basic_blocks::modulators::ADSREnvelope<SRProvider, 16>> oh_env;
     
     bool gate = false;
     bool accent = false;
@@ -94,7 +94,7 @@ struct HatSynth
     
     float ChAtime = log2(0.5e-3f);
     float H = log2(2.2e-3f);
-    float ChRtime = log2(70e-3f);
+    float ChRtime = log2(81e-3f);
     
     float OhAtime = 0.001;
     float OhDtime = 0.55;
@@ -129,12 +129,33 @@ struct HatSynth
     void setOhDec(float decay) {
         OhHoldtime = decay;
     }
+    void setOhDec2(float decay) {
+        OhDtime = decay;
+    }
     void setChDec(float decay) {
         ChRtime = log2(decay);
     }
     
-    void setChHpf(float freq) {
-        ch_hpf.calcCoefs(freq, 1.0, sampleRate);
+    float chHpfQ, chHpfFreq;
+    void setChHpfQ(float q) {
+        chHpfQ = q;
+        ch_hpf.calcCoefs(chHpfFreq, chHpfQ, sampleRate);
+    }
+    
+    void setChHpfFreq(float freq) {
+        chHpfFreq = freq;
+        ch_hpf.calcCoefs(chHpfFreq, chHpfQ, sampleRate);
+    }
+    
+    float ohHpfQ, ohHpfFreq;
+    void setOhHpfQ(float q) {
+        ohHpfQ = q;
+        oh_hpf.calcCoefs(ohHpfFreq, ohHpfQ, sampleRate);
+    }
+    
+    void setOhHpfFreq(float freq) {
+        ohHpfFreq = freq;
+        oh_hpf.calcCoefs(ohHpfFreq, ohHpfQ, sampleRate);
     }
 
     void prepare(float sampleRate) {
@@ -143,18 +164,22 @@ struct HatSynth
         
         srp.prepare(sampleRate);
         
-        ch_env = std::make_unique<sst::basic_blocks::modulators::ADAREnvelope<SampleSRProvider, 16>>(&srp);
-        oh_env = std::make_unique<sst::basic_blocks::modulators::ADSREnvelope<SampleSRProvider, 16>>(&srp);
+        ch_env = std::make_unique<sst::basic_blocks::modulators::ADAREnvelope<SRProvider, 16>>(&srp);
+        oh_env = std::make_unique<sst::basic_blocks::modulators::ADSREnvelope<SRProvider, 16>>(&srp);
         
         reso.prepare(sampleRate);
         
         metal.prepare(sampleRate);
         metal.setPitchCV(1.0f);
         
+        chHpfFreq = 11550;
+        chHpfQ = 1.4;
         ch_hpf.prepare(1);
-        ch_hpf.calcCoefs(11550, 1.4, sampleRate);
+        ch_hpf.calcCoefs(chHpfFreq, chHpfQ, sampleRate);
         oh_hpf.prepare(1);
-        oh_hpf.calcCoefs(7580, 1.28, sampleRate);
+        ohHpfFreq = 7580;
+        ohHpfQ = 1.28;
+        oh_hpf.calcCoefs(ohHpfFreq, ohHpfQ, sampleRate);
     }
     
     void process() {

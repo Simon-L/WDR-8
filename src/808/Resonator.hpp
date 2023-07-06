@@ -16,12 +16,14 @@ public:
 
     void prepare (double sampleRate)
     {
+        C4.prepare ((float) sampleRate);
         C58.prepare ((float) sampleRate);
         C59.prepare ((float) sampleRate);
     }
 
     void reset()
     {
+        C4.reset();
         C58.reset();
         C59.reset();
     }
@@ -68,7 +70,7 @@ private:
     wdft::CapacitorT<float> C59 { 3.3e-9f };
 
     // Port E
-    wdft::ResistorT<float> R196 { 560.0f };
+    wdft::ResistorT<float> R196 { 508.0f };
 
     struct ImpedanceCalc
     {
