@@ -48,8 +48,8 @@ void PluginDSP::run(const float** inputs, float** outputs, uint32_t frames, cons
     for (uint32_t i=0; i < frames; ++i)
     {   
         hat1.process();
-        outL[i] = (hat1.oh_out) * 0.5 * params.values[kVolume];
-        outR[i] = (hat1.oh_out) * 0.5 * params.values[kVolume];
+        outL[i] = (hat1.ch_out + hat1.oh_out) * 0.5 * params.values[kVolume];
+        outR[i] = (hat1.ch_out + hat1.oh_out) * 0.5 * params.values[kVolume];
 
         // plot[plotIndex] = synth.freq;
         // plotIndex++;

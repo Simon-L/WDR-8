@@ -71,7 +71,7 @@ struct eightohatParameters
         Parameter(kParameterIsAutomatable, "OH hpf Freq", "ohHpfFreq", "", 7580.0f, 7000.0f, 20000.0),
         Parameter(kParameterIsAutomatable, "OH hpf Q", "ohHpfQ", "", 1.28f, 0.01f, 2.0),
         Parameter(kParameterIsAutomatable, "CH dec", "ch_dec", "", 81e-3f, 20e-3f, 1500e-3f), // closed hat dec
-        Parameter(kParameterIsAutomatable, "OH dec", "oh_dec", "", 120e-3f, 40e-3f, 650e-3f), // open hat dec
+        Parameter(kParameterIsAutomatable, "OH dec", "oh_dec", "", 40e-3f, 40e-3f, 700e-3f), // open hat dec
         Parameter(kParameterIsAutomatable, "OH dec2", "oh_dec2", "", 0.55, 0.001, 1.5), // open hat dec2
         Parameter(kParameterIsAutomatable, "Volume", "volume", "", 0.6303f, 0.0, 1.0), // Volume
     };
